@@ -1,0 +1,35 @@
+
+
+.LandinContain{
+    padding:3%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+}
+
+.video{
+    width: 80%;
+    animation:tracking-in-expand-forward-top 0.4s linear both} @keyframes tracking-in-expand-forward-top{0%{letter-spacing:-.2em;transform:translateZ(-700px) translateY(-100px);opacity:0}40%{opacity:.6}100%{transform:translateZ(0) translateY(0);opacity:1}}
+
+
+
+    
+
+
+.firstContain{
+ display: flex;
+width: auto;
+padding-top: 2em;
+ align-items: center;
+ gap: 2vw;
+}
+.section1{
+    font-size: 1.8em;
+    margin-left: 16%;
+    width: 50%;
+}
+
+.section2{
+    margin-left: 10%;
+}
