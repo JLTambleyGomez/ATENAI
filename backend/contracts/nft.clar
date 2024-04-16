@@ -10,7 +10,7 @@
 
 ;; constants
 (define-constant contract-owner tx-sender)
-(define-constant err-owner-only (err u100))
+(define-constant err-sender-same-recipient (err u100))
 (define-constant err-not-token-owner (err u101))
 
 ;; data vars
@@ -32,7 +32,7 @@
         (
             (token-id (+ (var-get last-token-id) u1))
         )
-        (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+        (asserts! (not (is-eq tx-sender recipient)) err-sender-same-recipient)
         (try! (nft-mint? atenai token-id recipient))
         (map-insert ipfs token-id ipfs-hash)
         (var-set last-token-id token-id)
