@@ -3,6 +3,7 @@
 .LandinContain{
     padding:3%;
     display: flex;
+    flex-direction:column;
     align-items: center;
     justify-content: space-around;
 
@@ -14,8 +15,126 @@
 
 
 
+.secondcontain{
+    margin-top:8%;
+    width:100%;
+
+    height:100vh;
+}
     
 
+.h1s2{
+    font-size:2.8em;
+    font-weight:300;
+}
+
+.img{
+    width:40%;
+}
+
+.label{
+
+    font-size:3em;
+}
+.section2-1{
+    display:flex;
+    flex-direction:row;
+    height:90vh;
+    align-items:center;
+    justify-content:space-around;
+}
+
+.tokenize{
+    margin-top:2%;
+    width:30%;
+    margin-left:30%;
+    height:3em;
+    color:white;
+    cursor:pointer;
+    font-weight:bolder;
+    border-radius:4%;
+
+    background-color:rgb(131, 41, 173);
+    transition:all 0.5s;
+}
+.tokenize:hover{
+    background-color:white;
+    color:rgb(131, 41, 173);
+}
+
+.options{
+    display:flex;
+    margin-top:4%;
+    gap:1%;
+    flex-direction:column;
+    justify-content:center;
+}
+.copy{
+    cursor:pointer;
+    display:flex;
+    justify-content:center;
+    width:9em;
+    gap:1em;
+    cursor:pointer;
+    padding:1%;
+    border-radius:4%;
+    font-weight:bolder;
+    margin-bottom:1%;
+    background-color:white;
+    color:rgb(131, 41, 173);
+        transition:all 0.5s;
+   
+    
+}
+.new{
+    cursor:pointer;
+    display:flex;
+    justify-content:center;
+    width:5em;
+    cursor:pointer;
+    padding:1%;
+    border-radius:4%;
+    font-weight:bolder;
+    background-color:white;
+    color:rgb(131, 41, 173);
+        transition:all 0.5s;
+}
+
+.new:hover{
+    background-color:rgb(131, 41, 173);
+    color:white}
+
+
+.drag-drop-area{
+    height:30vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:rgb(96, 173, 209);
+    font-size:2em;
+    border-radius:20px;
+    background-color:rgba(168, 250, 231, 0.63);
+}
+
+.audio{
+    height:30vh;
+    display:flex;
+    gap:4%;
+    width:100%;
+    justify-content:center;
+    align-items:center;
+    background-color:rgba(168, 250, 231, 0.63);
+}
+.title{
+    font-weight:400;
+    font-size:2.3em
+}
+
+.section2-2{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
 
 .firstContain{
  display: flex;

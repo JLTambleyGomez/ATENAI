@@ -1,35 +1,49 @@
 import { StacksTestnet } from '@stacks/network';
-// import {  } from '@stacks/transactions';
 import React, { useState, useEffect } from 'react';
+import "./assets/css/Landing.css";
+import Swal from 'sweetalert2';
 import axios from 'axios';
+import Loading from "./Loading";
 
-const ImageUploader = () => {
+const AudioUploader = () => {
     const [file, setFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState('');
+    const [audioPreview, setAudioPreview] = useState('');
     const [error, setError] = useState('');
     const [ipfsHash, setIpfsHash] = useState('');
-    const [ipfsUrl, setIpfsUrl] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
-                setImagePreview(e.target.result);
+                setAudioPreview(e.target.result);
             };
             reader.readAsDataURL(file);
         }
     }, [file]);
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
+    const handleCleanPreview = () => {
+        setAudioPreview("");
+    }
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        const droppedFile = e.dataTransfer.files[0];
+        if (droppedFile.type.startsWith('audio/')) {
+            setFile(droppedFile);
+        } else {
+            setError('Please select a valid audio file.');
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!file) {
-            setError('Por favor, selecciona un archivo antes de enviar.');
+            setError('Please select a file before submitting.');
             return;
         }
+
+        setLoading(true);
 
         try {
             const formData = new FormData();
@@ -43,54 +57,94 @@ const ImageUploader = () => {
             });
 
             setIpfsHash(res.data.IpfsHash);
-            setIpfsUrl(`https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`);
             setFile(null);
-            setImagePreview('');
-        } catch (error) {
-            console.error("=> Error al enviar imagen a IPFS", error);
-            setError('No se pudo subir la imagen a IPFS.');
-            setFile(null);
-            setImagePreview('');
-        }
-    };
-
-    const mintNFT = async (recipient, ipfsHash) => {
-        const network = new StacksTestnet(); // O StacksTestnet si estás en testnet
-        const contractAddress = 'SP0000000000000000000000000000000000000000'; // Dirección del contrato
-        const functionName = 'mint';
-        const functionArgs = [recipient, ipfsHash];
-
-        try {
-            const result = await callContractFunction({
-                network,
-                contractAddress,
-                functionName,
-                functionArgs,
-                // Aquí también necesitarás proporcionar la configuración de la sesión del usuario
-                // y posiblemente la clave privada para firmar la transacción
+            setAudioPreview('');
+            setLoading(false);
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'You have tokenized your audio.',
+                confirmButtonColor: '#6b46c1',
+                background: "#6200ee",
+                color: "white",
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
             });
-            console.log('NFT minted successfully:', result);
         } catch (error) {
-            console.error('Error minting NFT:', error);
+            console.error("Error uploading audio to IPFS", error);
+            setError('Failed to upload the audio file to IPFS.');
+            setFile(null);
+            setAudioPreview('');
+            setLoading(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to upload the audio file to IPFS.',
+                confirmButtonColor: '#6b46c1',
+            });
         }
     };
 
     return (
-        <div className="">
+        <div className="upload" onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
             <form className="" id="uploadForm" onSubmit={handleSubmit}>
-                <label htmlFor="file">Upload your File:</label>
-                <input className="" type="file" name="file" id="file" onChange={handleFileChange} />
+                {audioPreview ? (
+                    <div className="audio">
+                        <audio controls >
+                            <source src={audioPreview} type="audio/mpeg" />
+                            Your browser does not support the audio element.
+                        </audio>
+                        <p className="new" onClick={handleCleanPreview}>New</p>
+                    </div>
+                ) : (
+                    <div className="drag-drop-area">
+                        <p>Drag and drop your audio file here</p>
+                    </div>
+                )}
+
                 <div className="">
-                    <button className="" type="submit">Submit</button>
+                    <button className="tokenize" type="submit">Tokenize</button>
                 </div>
             </form>
-            <div className="">
+
+            <div className="options">
+                {loading && <Loading />}
                 <span>{error}</span>
-                <span>{ipfsHash && `IPFS Hash: ${ipfsHash}`}</span>
-                <span>{ipfsUrl && `View the file here: ${ipfsUrl}`}</span>
+
+
+                {ipfsHash && (
+                    <span>
+                        <button className="copy" onClick={() => {
+                            navigator.clipboard.writeText(ipfsHash);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Copied',
+                                text: 'Hash copied to clipboard!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }}>Copy Hash 
+                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+</svg>
+                        
+                        </button>
+                    </span>
+                )}
+                {ipfsHash && (
+                    <span >
+                        <a  href={`https://gateway.pinata.cloud/ipfs/${ipfsHash}`} target="_blank" rel="noopener noreferrer">View File</a>
+       
+                   
+                    </span>
+                )}
             </div>
         </div>
     );
 };
 
-export default ImageUploader;
+export default AudioUploader;

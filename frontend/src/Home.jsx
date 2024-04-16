@@ -1,11 +1,12 @@
 
 import "./assets/css/Home.css"
+import ImageUploader from "./AddFile"
 
 const Home =()=>{
     return(
         <div>
+            <ImageUploader></ImageUploader>
 
-            HOME|
         </div>
     )
 }
