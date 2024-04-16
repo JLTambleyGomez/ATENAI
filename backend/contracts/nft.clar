@@ -16,8 +16,8 @@
 ;; data vars
 (define-data-var last-token-id uint u0)
 
-;; data maps
-(define-data-var ipfs-hashes (string-ascii 80) "ipfs-hash")
+;; data map
+(define-map ipfs uint (string-ascii 256))
 
 ;; public functions
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
@@ -27,14 +27,14 @@
     )
 )
 
-(define-public (mint (recipient principal) (ipfs-hash (string-ascii 80)))
+(define-public (mint (recipient principal) (ipfs-hash (string-ascii 256)))
     (let
         (
             (token-id (+ (var-get last-token-id) u1))
         )
         (asserts! (is-eq tx-sender contract-owner) err-owner-only)
         (try! (nft-mint? atenai token-id recipient))
-        (var-set ipfs-hashes ipfs-hash)
+        (map-insert ipfs token-id ipfs-hash)
         (var-set last-token-id token-id)
         (ok token-id)
     )
@@ -46,13 +46,9 @@
 )
 
 (define-read-only (get-token-uri (token-id uint))
-    (ok none)
+    (ok (map-get? ipfs token-id))
 )
 
 (define-read-only (get-owner (token-id uint))
     (ok (nft-get-owner? atenai token-id))
-)
-
-(define-read-only (get-ipfs-hash (token-id uint))
-    (ok (var-get ipfs-hashes))
 )
