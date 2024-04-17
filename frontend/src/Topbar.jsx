@@ -9,7 +9,7 @@ const Topbar = ({walletAddress}) => {
   console.log("=> user Wallet: ", walletAddress);
 
   const appDetails = {
-    name: "Keros",
+    name: "Atenai",
     icon: "",
   };
   const connectWallet = () => {
