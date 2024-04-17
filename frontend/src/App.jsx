@@ -1,3 +1,5 @@
+import { AppConfig, UserSession, showConnect } from "@stacks/connect";
+import React, { useState, useEffect } from 'react';
 import {Routes, Route} from "react-router-dom"
 import Landing from "./Landing"
 import Home from "./Home"
@@ -6,13 +8,25 @@ import './App.css'
 
 function App() {
 
+  const appConfig = new AppConfig(["store_write"]);
+  const userSession = new UserSession({ appConfig });
+  const [walletAddress, setWalletAddress] = useState('');
+
+  useEffect(() => {
+    if (userSession.isUserSignedIn()) {
+      const { testnet } = userSession.loadUserData().profile.stxAddress;
+      const userWallet = testnet;
+      setWalletAddress(userWallet);
+    }
+  }, [userSession.isUserSignedIn()]);
+
   return (
     <div className="App">
-  <Topbar></Topbar> 
+  <Topbar walletAddress={walletAddress}/>
       <Routes>
-      <Route path="/" element={<Landing />} />
+      <Route path="/" element={<Landing walletAddress={walletAddress}/>} />
       <Route path ="/Home" element={<Home />} />
-      </Routes>
+      </Routes>    
     </div>
   )
 }

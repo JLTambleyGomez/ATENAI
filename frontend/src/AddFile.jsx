@@ -1,16 +1,26 @@
 import { StacksTestnet } from '@stacks/network';
+import { stringAsciiCV, principalCV } from "@stacks/transactions";
+import { openContractCall } from "@stacks/connect";
 import React, { useState, useEffect } from 'react';
 import "./assets/css/Landing.css";
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import Loading from "./Loading";
 
-const AudioUploader = () => {
+const AudioUploader = ({ walletAddress }) => {
+
     const [file, setFile] = useState(null);
     const [audioPreview, setAudioPreview] = useState('');
     const [error, setError] = useState('');
     const [ipfsHash, setIpfsHash] = useState('');
     const [loading, setLoading] = useState(false);
+
+    const network = new StacksTestnet();
+
+    const appDetails = {
+        name: "Atenai",
+        icon: "",
+    };
 
     useEffect(() => {
         if (file) {
@@ -57,6 +67,7 @@ const AudioUploader = () => {
             });
 
             setIpfsHash(res.data.IpfsHash);
+            const ipfsHash = res.data.IpfsHash
             setFile(null);
             setAudioPreview('');
             setLoading(false);
@@ -74,6 +85,23 @@ const AudioUploader = () => {
                     popup: 'animate__animated animate__fadeOutUp'
                 }
             });
+            try {
+                if (ipfsHash) {
+                    const options = {
+                        contractAddress: "ST3DPBBSE0B04WWBXXF8TNBRPDW72084WYXGEZERB",
+                        contractName: "nft",
+                        functionName: "mint",
+                        functionArgs: [principalCV(walletAddress), stringAsciiCV(ipfsHash)],
+                        network,
+                        appDetails,
+                        onFinish: ({ tokenId }) => console.log(tokenId),
+                    };
+
+                    await openContractCall(options);
+                }
+            } catch (error) {
+                console.log("=> Error al mintear token:", error)
+            }
         } catch (error) {
             console.error("Error uploading audio to IPFS", error);
             setError('Failed to upload the audio file to IPFS.');
@@ -127,19 +155,19 @@ const AudioUploader = () => {
                                 showConfirmButton: false,
                                 timer: 1500
                             });
-                        }}>Copy Hash 
-                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
-</svg>
-                        
+                        }}>Copy Hash
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                            </svg>
+
                         </button>
                     </span>
                 )}
                 {ipfsHash && (
                     <span >
-                        <a  href={`https://gateway.pinata.cloud/ipfs/${ipfsHash}`} target="_blank" rel="noopener noreferrer">View File</a>
-       
-                   
+                        <a href={`https://gateway.pinata.cloud/ipfs/${ipfsHash}`} target="_blank" rel="noopener noreferrer">View File</a>
+
+
                     </span>
                 )}
             </div>

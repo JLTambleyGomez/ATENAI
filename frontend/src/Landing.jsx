@@ -1,7 +1,7 @@
 import ImageUploader from "./AddFile"
 import "./assets/css/Landing.css";
 
-const Landing = () => {
+const Landing = ({walletAddress}) => {
   return (
     <div className="LandinContain">
       <div className="firstContain">
@@ -35,7 +35,7 @@ const Landing = () => {
 
     <div className="section2-2">
 <h1 className="h1s2">Upload your file to tokenize your music</h1>
-      <ImageUploader></ImageUploader>
+      <ImageUploader walletAddress={walletAddress}/>
 
 </div>
       </div>

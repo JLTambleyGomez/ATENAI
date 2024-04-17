@@ -2,36 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { AppConfig, UserSession, showConnect, } from "@stacks/connect"
 import "./assets/css/Topbar.css"
 
-const Topbar = () => {
+const Topbar = ({walletAddress}) => {
 
   const appConfig = new AppConfig(["store_write"]);
   const userSession = new UserSession({ appConfig });
-  const [walletAddress, setWalletAddress] = useState('');
+  console.log("=> user Wallet: ", walletAddress);
 
   const appDetails = {
     name: "Keros",
     icon: "",
   };
-
-  useEffect(() => {
-    if (userSession.isUserSignedIn()) {
-      const { testnet } = userSession.loadUserData().profile.stxAddress;
-      const userWallet = testnet;
-      console.log("=> user Wallet: ", userWallet);
-      setWalletAddress(userWallet);
-      // login(userWallet).then(({ success, message }) => {
-      //   if (!success) {
-      //     console.log("=>Error desde useEffect", message);
-      //     if (window.confirm(message)) {
-      //       disconnectWallet();
-      //     }
-      //   } else {
-      //     console.log("=> login correcto");
-      //   }
-      // });
-    }
-  }, [userSession.isUserSignedIn()]);
-
   const connectWallet = () => {
     showConnect({
       appDetails,
