@@ -20,10 +20,10 @@ plan:
     - id: 1
       transactions:
         - contract-publish:
-            contract-name: nft
+            contract-name: Nft
             expected-sender: ST3DPBBSE0B04WWBXXF8TNBRPDW72084WYXGEZERB
-            cost: 19630
-            path: contracts/atenai.clar
+            cost: 18850
+            path: contracts/atenai-nft.clar
             anchor-block-only: true
             clarity-version: 2
       epoch: "2.4"

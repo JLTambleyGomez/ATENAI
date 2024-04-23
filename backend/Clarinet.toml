@@ -1,5 +1,5 @@
 [project]
-name = 'atenai'
+name = 'atenai-nft'
 description = ''
 authors = []
 telemetry = true
@@ -8,7 +8,7 @@ cache_dir = './.cache'
 [[project.requirements]]
 contract_id = 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9.nft-trait'
 [contracts.nft]
-path = 'contracts/atenai.clar'
+path = 'contracts/atenai-nft.clar'
 clarity_version = 2
 epoch = 2.4
 
